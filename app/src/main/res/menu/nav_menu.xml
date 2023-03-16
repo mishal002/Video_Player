@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/feedbackNav"
+        android:icon="@drawable/feedback_icon"
+        android:title="@string/feedback" />
+    <item
+        android:id="@+id/themesNav"
+        android:icon="@drawable/theme_icon"
+        android:title="@string/themes" />
+
+    <item
+        android:id="@+id/sort_oder"
+        android:icon="@drawable/menu"
+        android:title="@string/sort_oder" />
+    <item
+        android:id="@+id/aboutNav"
+        android:icon="@drawable/abou_icon"
+        android:title="@string/about" />
+    <item
+        android:id="@+id/exitNav"
+        android:icon="@drawable/logout_icon"
+        android:title="@string/exit" />
+</menu>
