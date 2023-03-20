@@ -24,7 +24,7 @@ class FolderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFolderBinding.inflate(layoutInflater)
-        setTheme(R.style.coolPinkNav)
+        setTheme(MainActivity.themeList[MainActivity.themeIndex])
         setContentView(binding.root)
 
 //      drawer

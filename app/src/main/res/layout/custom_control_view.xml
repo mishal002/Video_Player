@@ -7,51 +7,15 @@
     android:background="#42000000"
     android:orientation="vertical">
 
-    <!--  <LinearLayout-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="wrap_content"-->
-    <!--    android:gravity="center"-->
-    <!--    android:paddingTop="4dp"-->
-    <!--    android:orientation="horizontal">-->
-
-    <!--    <ImageButton android:id="@id/exo_prev"-->
-    <!--      style="@style/ExoMediaButton.Previous"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_rew"-->
-    <!--      style="@style/ExoMediaButton.Rewind"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_shuffle"-->
-    <!--      style="@style/ExoMediaButton"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_repeat_toggle"-->
-    <!--      style="@style/ExoMediaButton"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_play"-->
-    <!--      style="@style/ExoMediaButton.Play"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_pause"-->
-    <!--      style="@style/ExoMediaButton.Pause"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_ffwd"-->
-    <!--      style="@style/ExoMediaButton.FastForward"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_next"-->
-    <!--      style="@style/ExoMediaButton.Next"/>-->
-
-    <!--    <ImageButton android:id="@id/exo_vr"-->
-    <!--      style="@style/ExoMediaButton.VR"/>-->
-
-    <!--  </LinearLayout>-->
-
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@id/exo_progress_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
-        app:buffered_color="#80FFFFFF"
         app:played_color="@color/white"
         app:scrubber_color="@color/white"
+        app:buffered_color="#80FFFFFF"
         app:scrubber_disabled_size="5dp"
         app:scrubber_enabled_size="10dp"
         app:unplayed_color="#80FFFFFF" />
@@ -59,6 +23,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -69,7 +34,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:textColor="#FFFFFF"
-            android:layout_margin="10dp"
+            android:layout_margin="7dp"
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="@string/duration"/>
@@ -81,7 +46,7 @@
           android:paddingLeft="4dp"
           android:paddingRight="4dp"
           android:textColor="#FFFFFF"
-          android:layout_marginVertical="10dp"
+          android:layout_marginVertical="7dp"
           android:textSize="16sp"
           android:textStyle="bold"
           android:text=":"/>
@@ -97,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:layout_margin="10dp"
+            android:layout_margin="7dp"
             android:textSize="16sp"
             android:textStyle="bold" />
 

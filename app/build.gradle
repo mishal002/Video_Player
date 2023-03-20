@@ -4,12 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk 32
-
+    compileSdk 33
     defaultConfig {
         applicationId "e_card.e_cardaddress.adresschange.video_player"
         minSdk 24
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -32,6 +31,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    namespace 'e_card.e_cardaddress.adresschange.video_player'
 }
 
 dependencies {
@@ -40,12 +40,19 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.gms:play-services-games:23.1.0'
+    implementation 'androidx.games:games-activity:2.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
     implementation 'com.github.bumptech.glide:glide:4.15.0'
-//
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.4'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.4'
+
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.5'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.5'
+    implementation 'com.google.android.exoplayer:exoplayer-ui'
+
+//    implementation 'com.github.lukelorusso:VerticalSeekBar:1.2.7'
+
 
 }

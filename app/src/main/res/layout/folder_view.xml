@@ -17,6 +17,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/image"
         android:src="@drawable/folder_icon"
+        android:tint="?attr/themeColor"
         app:shapeAppearance="@style/curved" />
 
     <TextView

@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/image"
         android:padding="5dp"
-        android:src="@drawable/icon"
+        android:src="@drawable/icon_play"
         app:shapeAppearance="@style/curved" />
 
     <LinearLayout

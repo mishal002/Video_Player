@@ -2,16 +2,26 @@ package e_card.e_cardaddress.adresschange.video_player.Activitys
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import e_card.e_cardaddress.adresschange.video_player.Data.Folder
 import e_card.e_cardaddress.adresschange.video_player.Data.Video
 import e_card.e_cardaddress.adresschange.video_player.Fragments.FoldersFragment
@@ -19,23 +29,49 @@ import e_card.e_cardaddress.adresschange.video_player.Fragments.StatusFragment
 import e_card.e_cardaddress.adresschange.video_player.Fragments.VideosFragment
 import e_card.e_cardaddress.adresschange.video_player.R
 import e_card.e_cardaddress.adresschange.video_player.databinding.ActivityMainBinding
+import e_card.e_cardaddress.adresschange.video_player.databinding.ThemeViewBinding
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
+    private var sortList = arrayOf(
+        MediaStore.Video.Media.DATE_ADDED + "DESC",
+        MediaStore.Video.Media.DATE_ADDED,
+        MediaStore.Video.Media.TITLE + "DESC",
+        MediaStore.Video.Media.TITLE,
+        MediaStore.Video.Media.SIZE + "DESC",
+        MediaStore.Video.Media.SIZE,
+    )
 
     companion object {
         lateinit var videoList: ArrayList<Video>
         lateinit var folderList: ArrayList<Folder>
+        lateinit var searchList: ArrayList<Video>
+        var search: Boolean = false
+        private var sortValue: Int = 0
+        var themeIndex: Int = 0
+        val themeList = arrayOf(
+            R.style.coolPinkNav,
+            R.style.coolBlueNav,
+            R.style.coolPurpalNav,
+            R.style.coolGreenNav,
+            R.style.coolRedNav,
+            R.style.coolBlackNav
+        )
     }
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val editor = getSharedPreferences("Theme", MODE_PRIVATE)
+        themeIndex = editor.getInt("themeIndex", 0)
+
+        setTheme(themeList[themeIndex])
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setTheme(R.style.coolPinkNav)
         setContentView(binding.root)
 // nav drawer
 
@@ -52,6 +88,7 @@ class MainActivity : AppCompatActivity() {
 
 //
         binding.bottomNav.setOnItemSelectedListener {
+            vibrat()
             when (it.itemId) {
                 R.id.videoView -> setFagments(VideosFragment())
                 R.id.foldersView -> setFagments(FoldersFragment())
@@ -62,17 +99,76 @@ class MainActivity : AppCompatActivity() {
 //
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.feedbackNav -> Toast.makeText(
-                    this@MainActivity,
-                    "Feedback",
-                    Toast.LENGTH_SHORT
-                ).show()
-                R.id.themesNav -> Toast.makeText(this@MainActivity, "themes", Toast.LENGTH_SHORT)
-                    .show()
-                R.id.sort_oder -> Toast.makeText(this@MainActivity, "Shor_oder", Toast.LENGTH_SHORT)
-                    .show()
-                R.id.aboutNav -> Toast.makeText(this@MainActivity, "about", Toast.LENGTH_SHORT)
-                    .show()
+                R.id.themesNav -> {
+                    val customeDialog =
+                        LayoutInflater.from(this).inflate(R.layout.theme_view, binding.root, false)
+                    val bindingTV = ThemeViewBinding.bind(customeDialog)
+                    val dialog = MaterialAlertDialogBuilder(this).setView(customeDialog)
+                        .setTitle("Select Theme")
+                        .create()
+                    dialog.show()
+
+                    when (themeIndex) {
+                        0 -> bindingTV.themePink.setBackgroundColor(Color.MAGENTA)
+                        1 -> bindingTV.themeBlue.setBackgroundColor(Color.BLUE)
+                        2 -> bindingTV.themePurpul.setBackgroundColor(Color.CYAN)
+                        3 -> bindingTV.themeGreen.setBackgroundColor(Color.GREEN)
+                        4 -> bindingTV.themeRed.setBackgroundColor(Color.RED)
+                        5 -> bindingTV.themeBlack.setBackgroundColor(Color.BLACK)
+                    }
+                    bindingTV.themePink.setOnClickListener {
+                        saveTheme(0)
+                    }
+                    bindingTV.themeBlue.setOnClickListener {
+                        saveTheme(1)
+
+                    }
+                    bindingTV.themePurpul.setOnClickListener {
+                        saveTheme(2)
+
+                    }
+                    bindingTV.themeGreen.setOnClickListener {
+                        saveTheme(3)
+
+                    }
+                    bindingTV.themeRed.setOnClickListener {
+                        saveTheme(4)
+
+                    }
+                    bindingTV.themeBlack.setOnClickListener {
+                        saveTheme(5)
+
+                    }
+                }
+                R.id.sort_oder -> {
+                    val menuItem = arrayOf(
+                        "Latest",
+                        "Oldest",
+                        "Name(A To Z)",
+                        "Name(Z to A)",
+                        "File Size(Smallest)",
+                        "File Size(Largest)"
+                    )
+                    var value = sortValue
+                    val dialog = MaterialAlertDialogBuilder(this)
+                        .setTitle("Sort By")
+                        .setPositiveButton("OK") { _, _ ->
+                            val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE).edit()
+                            sortEditor.putInt("sortValue", value)
+                            sortEditor.apply()
+
+                            finish()
+                            startActivity(intent)
+                        }
+                        .setSingleChoiceItems(menuItem, sortValue) { _, pos ->
+                            value = pos
+                        }
+                        .create()
+                    dialog.show()
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
+                }
+                R.id.aboutNav -> startActivity(Intent(this, AboutActivity::class.java))
+
                 R.id.exitNav -> finish()
             }
             return@setNavigationItemSelectedListener true
@@ -89,7 +185,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //    for permission
-    fun requestRuntimePermission(): Boolean {
+    private fun requestRuntimePermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 WRITE_EXTERNAL_STORAGE
@@ -122,6 +218,19 @@ class MainActivity : AppCompatActivity() {
 
     //
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        val gradientList = arrayOf(
+            R.drawable.pink_gradient,
+            R.drawable.blue_gradient,
+            R.drawable.purpul_gradient,
+            R.drawable.green_gradient,
+            R.drawable.red_gradient,
+            R.drawable.black_gradient
+        )
+
+        findViewById<LinearLayout>(R.id.gradientLayout).setBackgroundResource(gradientList[themeIndex])
+
+        vibrat()
         if (toggle.onOptionsItemSelected(item))
             return true
         return super.onOptionsItemSelected(item)
@@ -131,9 +240,10 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("Range")
     fun getAllVideo(): ArrayList<Video> {
 
+        val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE)
+        sortValue = sortEditor.getInt("sortValue", 0)
         val tempList = ArrayList<Video>()
         val tempFolderList = ArrayList<String>()
-
 
         val projection = arrayOf(
             MediaStore.Video.Media.TITLE,
@@ -147,7 +257,7 @@ class MainActivity : AppCompatActivity() {
         )
         val cursor = this.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-            MediaStore.Video.Media.DATE_ADDED
+            sortList[sortValue]
         )
 
         if (cursor != null) {
@@ -190,5 +300,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return tempList
+    }
+
+    private fun vibrat() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= 26) {
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(100)
+        }
+    }
+
+
+    private fun saveTheme(index: Int) {
+        val editior = getSharedPreferences("Theme", MODE_PRIVATE).edit()
+        editior.putInt("themeIndex", index)
+        editior.apply()
+
+        finish()
+        startActivity(intent)
     }
 }

@@ -35,6 +35,18 @@
     <string name="next_btn" />
     <string name="full_screen" />
     <string name="play_btn" />
+    <string name="audio_track">Audio_track</string>
+    <string name="pip_mode">PIP Mode</string>
+    <string name="sleep_timer">Sleep Timer</string>
+    <string name="speed">Speed</string>
+    <string name="booster">Booster</string>
+    <string name="subtitles">Subtitles</string>
+    <string name="search" />
 
+    <!--    -->
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="info">Info</string>
+    <string name="share">Share</string>
 
 </resources>

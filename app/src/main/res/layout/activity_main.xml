@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:backgroundTint="@color/white"
-            app:itemIconTint="#2196F3"
+            app:itemIconTint="?attr/themeColor"
             app:itemTextAppearanceActive="@color/black"
             app:itemTextColor="@color/black"
             app:menu="@menu/boottom_nav" />
@@ -40,7 +40,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:itemTextColor="@color/black"
-        app:itemIconTint="#2196F3"
+        app:itemIconTint="?attr/themeColor"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu" />
 
