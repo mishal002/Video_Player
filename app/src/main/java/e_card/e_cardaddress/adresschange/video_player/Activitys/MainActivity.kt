@@ -7,10 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.os.*
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -36,8 +33,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
+    var runnable: Runnable? = null
     private var sortList = arrayOf(
-        MediaStore.Video.Media.DATE_ADDED + "DESC",
+//        MediaStore.Video.Media.DATE_ADDED + "DESC",
         MediaStore.Video.Media.DATE_ADDED,
         MediaStore.Video.Media.TITLE + "DESC",
         MediaStore.Video.Media.TITLE,
@@ -52,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         var search: Boolean = false
         private var sortValue: Int = 0
         var themeIndex: Int = 0
+        var adapterChanged: Boolean? = false
         val themeList = arrayOf(
             R.style.coolPinkNav,
             R.style.coolBlueNav,
@@ -60,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             R.style.coolRedNav,
             R.style.coolBlackNav
         )
+        var datachange: Boolean = false
     }
 
     @SuppressLint("ResourceType")
@@ -84,6 +84,17 @@ class MainActivity : AppCompatActivity() {
             folderList = ArrayList()
             videoList = getAllVideo()
             setFagments(VideosFragment())
+
+
+//            runnable = Runnable {
+//                if (datachange) {
+//                    videoList = getAllVideo()
+//                    datachange = false
+//                    adapterChanged = true
+//                }
+//                Handler(Looper.getMainLooper()).postDelayed(runnable!!, 100)
+//            }
+//            Handler(Looper.getMainLooper()).postDelayed(runnable!!, 0)
         }
 
 //
@@ -284,7 +295,7 @@ class MainActivity : AppCompatActivity() {
                             duration = duration,
                             folderName = folderC,
                             size = sizeC,
-                            pahth = pathC,
+                            path = pathC,
                             artUri = artUri
                         )
                         if (file.exists()) tempList.add(video)
@@ -319,5 +330,10 @@ class MainActivity : AppCompatActivity() {
 
         finish()
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        runnable = null
     }
 }

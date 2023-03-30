@@ -7,13 +7,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import e_card.e_cardaddress.adresschange.video_player.Activitys.MainActivity
+import e_card.e_cardaddress.adresschange.video_player.Activitys.PlayerActivity
 import e_card.e_cardaddress.adresschange.video_player.Adapters.VideoAdapter
 import e_card.e_cardaddress.adresschange.video_player.R
 import e_card.e_cardaddress.adresschange.video_player.databinding.FragmentVideosBinding
 
 class VideosFragment : Fragment() {
 
-    private lateinit var adapter: VideoAdapter
+    lateinit var adapter: VideoAdapter
+   lateinit var binding: FragmentVideosBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -25,7 +27,7 @@ class VideosFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        requireContext().theme.applyStyle(MainActivity.themeList[MainActivity.themeIndex],true)
+        requireContext().theme.applyStyle(MainActivity.themeList[MainActivity.themeIndex], true)
         val view = inflater.inflate(R.layout.fragment_videos, container, false)
         val binding = FragmentVideosBinding.bind(view)
         binding.VideoRV.setHasFixedSize(true)
@@ -58,6 +60,13 @@ class VideosFragment : Fragment() {
             }
         })
         super.onCreateOptionsMenu(menu, inflater)
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onResume() {
+        super.onResume()
+//        if (PlayerActivity.position != -1) binding.nowPlayingBtn.visibility = View.VISIBLE
+        if (MainActivity.adapterChanged!!) adapter.notifyDataSetChanged()
+        MainActivity.adapterChanged = false
     }
 }

@@ -1,31 +1,44 @@
 package e_card.e_cardaddress.adresschange.video_player.Adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
+import android.text.format.Formatter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import e_card.e_cardaddress.adresschange.video_player.Activitys.FolderActivity
 import e_card.e_cardaddress.adresschange.video_player.Activitys.MainActivity
 import e_card.e_cardaddress.adresschange.video_player.Activitys.PlayerActivity
 import e_card.e_cardaddress.adresschange.video_player.Data.Video
 import e_card.e_cardaddress.adresschange.video_player.R
+import e_card.e_cardaddress.adresschange.video_player.databinding.DetailsViewBinding
 import e_card.e_cardaddress.adresschange.video_player.databinding.RenameFieldBinding
 import e_card.e_cardaddress.adresschange.video_player.databinding.VideoMoreFeaturesBinding
 import e_card.e_cardaddress.adresschange.video_player.databinding.VideoViewBinding
+import java.io.File
 
 class VideoAdapter(
-    val context: Context,
-    var videoList: ArrayList<Video>,
-    val isFolder: Boolean = false
+    private val context: Context,
+    private var videoList: ArrayList<Video>,
+    private val isFolder: Boolean = false
 ) :
     RecyclerView.Adapter<VideoAdapter.Viewdata>() {
 
@@ -76,8 +89,9 @@ class VideoAdapter(
             val dialog = MaterialAlertDialogBuilder(context).setView(customeDialog)
                 .create()
             dialog.show()
-
+//
             bindingMF.renameBtn.setOnClickListener {
+                requestPermissionR()
                 dialog.dismiss()
                 val customeDialogRF =
                     LayoutInflater.from(context).inflate(R.layout.rename_field, holder.root, false)
@@ -85,6 +99,56 @@ class VideoAdapter(
                 val dialogRF = MaterialAlertDialogBuilder(context).setView(customeDialogRF)
                     .setCancelable(false)
                     .setPositiveButton("Rename") { self, _ ->
+                        val currentFile = File(videoList[position].path)
+                        val newName = bindingRF.renameField.text
+                        Log.e("TAG", "onBindViewHolder: $newName")
+                        if (newName != null && currentFile.exists() && newName.toString()
+                                .isEmpty()
+                        ) {
+                            val newFile = File(
+                                currentFile.parentFile,
+                                newName.toString() + "." + currentFile.extension
+                            )
+                            if (currentFile.renameTo(newFile)) {
+                                MediaScannerConnection.scanFile(
+                                    context,
+                                    arrayOf(newFile.toString()),
+                                    arrayOf("video/*"),
+                                    null
+                                )
+                                when {
+                                    MainActivity.search -> {
+                                        MainActivity.searchList[position].title =
+                                            newName.toString()
+                                        MainActivity.searchList[position].path =
+                                            newFile.path
+                                        MainActivity.searchList[position].artUri =
+                                            Uri.fromFile(newFile)
+                                        notifyItemChanged(position)
+                                    }
+                                    isFolder -> {
+                                        FolderActivity.currentFolderVideo[position].title =
+                                            newName.toString()
+                                        FolderActivity.currentFolderVideo[position].path =
+                                            newFile.path
+                                        FolderActivity.currentFolderVideo[position].artUri =
+                                            Uri.fromFile(newFile)
+                                        notifyItemChanged(position)
+                                        MainActivity.datachange = true
+                                    }
+                                    else -> {
+                                        MainActivity.videoList[position].title = newName.toString()
+                                        MainActivity.videoList[position].path = newFile.path
+                                        MainActivity.videoList[position].artUri =
+                                            Uri.fromFile(newFile)
+                                        notifyItemChanged(position)
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context, "Permission Denied!!", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                         self.dismiss()
                     }.setNegativeButton("Cancel") { self, _ ->
                         self.dismiss()
@@ -101,6 +165,102 @@ class VideoAdapter(
                         MaterialColors.getColor(context, R.attr.themeColor, Color.RED)
                     )
             }
+            bindingMF.shareBtn.setOnClickListener {
+                dialog.dismiss()
+                val shareIntent = Intent()
+                shareIntent.type = "video/*"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(videoList[position].path))
+                shareIntent.action = Intent.ACTION_SEND
+                ContextCompat.startActivity(
+                    context,
+                    Intent.createChooser(shareIntent, "Shareing Video File!!"), null
+                )
+            }
+            bindingMF.infoBtn.setOnClickListener {
+                dialog.dismiss()
+                val customDialogIF =
+                    LayoutInflater.from(context).inflate(R.layout.details_view, holder.root, false)
+                val bindingIF = DetailsViewBinding.bind(customDialogIF)
+                val dialogIF = MaterialAlertDialogBuilder(context).setView(customDialogIF)
+                    .setCancelable(false)
+                    .setPositiveButton("Ok") { self, _ ->
+                        self.dismiss()
+                    }
+                    .create()
+                dialogIF.show()
+                val infoText = SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
+                    .append(videoList[position].title)
+                    .bold { append("\n\nDuration: ") }
+                    .append(DateUtils.formatElapsedTime(videoList[position].duration / 1000))
+                    .bold { append("\n\nFile Size: ") }.append(
+                        Formatter.formatShortFileSize(
+                            context,
+                            videoList[position].size.toLong()
+                        )
+                    )
+                    .bold { append("\n\nLocation: ") }.append(videoList[position].path)
+
+                bindingIF.detailTV.text = infoText
+                dialogIF.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(
+                    MaterialColors.getColor(context, R.attr.themeColor, Color.RED)
+                )
+            }
+            bindingMF.deleteBtn.setOnClickListener {
+                requestPermissionR()
+                dialog.dismiss()
+                val dialogDF = MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete Video?")
+                    .setMessage(videoList[position].title)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes") { self, _ ->
+                        val file = File(videoList[position].path)
+                        if (file.exists() && file.delete()) {
+                            MediaScannerConnection.scanFile(
+                                context,
+                                arrayOf(file.path),
+                                arrayOf("video/*"),
+                                null
+                            )
+                            when {
+                                MainActivity.search -> {
+                                    MainActivity.datachange = true
+                                    videoList.removeAt(position)
+                                    notifyDataSetChanged()
+                                }
+                                isFolder -> {
+                                    FolderActivity.currentFolderVideo.removeAt(position)
+                                    notifyDataSetChanged()
+                                }
+                                else -> {
+                                    MainActivity.videoList.removeAt(position)
+                                    notifyDataSetChanged()
+                                }
+                            }
+                            MainActivity.videoList.removeAt(position)
+                            notifyDataSetChanged()
+                        } else {
+                            Toast.makeText(context, "Permission Denied!!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        self.dismiss()
+                    }
+                    .setNegativeButton("No") { self, _ ->
+                        self.dismiss()
+                    }
+                    .create()
+                dialogDF.show()
+                dialogDF.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setBackgroundColor(
+                        MaterialColors.getColor(context, R.attr.themeColor, Color.GREEN)
+                    )
+                dialogDF.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setBackgroundColor(
+                        MaterialColors.getColor(context, R.attr.themeColor, Color.RED)
+                    )
+            }
+
+
+
             return@setOnLongClickListener true
         }
     }
@@ -116,10 +276,24 @@ class VideoAdapter(
         ContextCompat.startActivity(context, intent, null)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(searchList: ArrayList<Video>) {
         videoList = ArrayList()
         videoList.addAll(searchList)
         notifyDataSetChanged()
+    }
+
+    //request by android 11 Permission
+    private fun requestPermissionR() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val i = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                i.addCategory("android.intent.category.DEFAULT")
+                i.data = Uri.parse("package:${context.applicationContext.packageName}")
+                ContextCompat.startActivity(context, i, null)
+            } else {
+            }
+        }
     }
 
 }

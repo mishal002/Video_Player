@@ -69,7 +69,7 @@ class FolderActivity : AppCompatActivity() {
         )
         val cursor = this.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, selection, arrayOf(folderId),
-            MediaStore.Video.Media.DATE_ADDED
+            MediaStore.Video.Media.DATE_ADDED+"DESC"
         )/*+ "DESC"*/
         if (cursor != null) {
             if (cursor.moveToNext()) {
@@ -93,7 +93,7 @@ class FolderActivity : AppCompatActivity() {
                             duration = duration,
                             folderName = folderC,
                             size = sizeC,
-                            pahth = pathC,
+                            path = pathC,
                             artUri = artUri
                         )
                         if (file.exists()) tempList.add(video)
