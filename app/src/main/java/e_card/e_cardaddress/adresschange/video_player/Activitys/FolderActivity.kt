@@ -69,7 +69,7 @@ class FolderActivity : AppCompatActivity() {
         )
         val cursor = this.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, selection, arrayOf(folderId),
-            MediaStore.Video.Media.DATE_ADDED+"DESC"
+            MediaStore.Video.Media.DATE_ADDED
         )/*+ "DESC"*/
         if (cursor != null) {
             if (cursor.moveToNext()) {
