@@ -27,6 +27,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs = [ '-Xjvm-default=compatibility' ]
     }
     buildFeatures {
         viewBinding = true
@@ -42,6 +43,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.gms:play-services-games:23.1.0'
     implementation 'androidx.games:games-activity:2.0.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -52,7 +54,11 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.18.5'
     implementation 'com.google.android.exoplayer:exoplayer-ui'
 
-//    implementation 'com.github.lukelorusso:VerticalSeekBar:1.2.7'
+    implementation 'com.github.vkay94:DoubleTapPlayerView:1.0.4'
+    implementation 'com.github.rubensousa:previewseekbar:3.1.0'
 
+    // ExoPlayer extension that contains a TimeBar.
+    // Grab this one if you're going to integrate with ExoPlayer
+    implementation 'com.github.rubensousa:previewseekbar-exoplayer:2.18.1.0'
 
 }

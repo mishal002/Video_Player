@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -21,34 +23,27 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import e_card.e_cardaddress.adresschange.video_player.Data.Folder
 import e_card.e_cardaddress.adresschange.video_player.Data.Video
+import e_card.e_cardaddress.adresschange.video_player.Data.getAllVideo
 import e_card.e_cardaddress.adresschange.video_player.Fragments.FoldersFragment
 import e_card.e_cardaddress.adresschange.video_player.Fragments.StatusFragment
 import e_card.e_cardaddress.adresschange.video_player.Fragments.VideosFragment
 import e_card.e_cardaddress.adresschange.video_player.R
 import e_card.e_cardaddress.adresschange.video_player.databinding.ActivityMainBinding
 import e_card.e_cardaddress.adresschange.video_player.databinding.ThemeViewBinding
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     var runnable: Runnable? = null
-    private var sortList = arrayOf(
-//        MediaStore.Video.Media.DATE_ADDED + "DESC",
-        MediaStore.Video.Media.DATE_ADDED,
-        MediaStore.Video.Media.TITLE + "DESC",
-        MediaStore.Video.Media.TITLE,
-        MediaStore.Video.Media.SIZE + "DESC",
-        MediaStore.Video.Media.SIZE,
-    )
+
 
     companion object {
         lateinit var videoList: ArrayList<Video>
         lateinit var folderList: ArrayList<Folder>
         lateinit var searchList: ArrayList<Video>
         var search: Boolean = false
-        private var sortValue: Int = 0
+        var sortValue: Int = 0
         var themeIndex: Int = 0
         var adapterChanged: Boolean? = false
         val themeList = arrayOf(
@@ -60,6 +55,14 @@ class MainActivity : AppCompatActivity() {
             R.style.coolBlackNav
         )
         var datachange: Boolean = false
+        var sortList = arrayOf(
+            MediaStore.Video.Media.DATE_ADDED + " DESC",
+            MediaStore.Video.Media.DATE_ADDED,
+            MediaStore.Video.Media.TITLE,
+            MediaStore.Video.Media.TITLE + " DESC",
+            MediaStore.Video.Media.SIZE,
+            MediaStore.Video.Media.SIZE + " DESC"
+        )
     }
 
     @SuppressLint("ResourceType")
@@ -82,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         if (requestRuntimePermission()) {
             folderList = ArrayList()
-            videoList = getAllVideo()
+            videoList = getAllVideo(this)
             setFagments(VideosFragment())
 
 
@@ -219,7 +222,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission allowd", Toast.LENGTH_SHORT).show()
                 folderList = ArrayList()
-                videoList = getAllVideo()
+                videoList = getAllVideo(this)
                 setFagments(VideosFragment())
             } else {
                 ActivityCompat.requestPermissions(this, arrayOf(WRITE_EXTERNAL_STORAGE), 1)
@@ -248,70 +251,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     //
-    @SuppressLint("Range")
-    fun getAllVideo(): ArrayList<Video> {
-
-        val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE)
-        sortValue = sortEditor.getInt("sortValue", 0)
-        val tempList = ArrayList<Video>()
-        val tempFolderList = ArrayList<String>()
-
-        val projection = arrayOf(
-            MediaStore.Video.Media.TITLE,
-            MediaStore.Video.Media.SIZE,
-            MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
-            MediaStore.Video.Media.DATA,
-            MediaStore.Video.Media.DATE_ADDED,
-            MediaStore.Video.Media.DURATION,
-            MediaStore.Video.Media.BUCKET_ID
-        )
-        val cursor = this.contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-            sortList[sortValue]
-        )
-
-        if (cursor != null) {
-            if (cursor.moveToNext()) {
-                do {
-                    val titleC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE))
-                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media._ID))
-                    val folderC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME))
-                    val folerIDC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID))
-                    val sizeC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.SIZE))
-                    val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
-                    val duration =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION))
-                            .toLong()
-                    try {
-                        val file = File(pathC)
-                        val artUri = Uri.fromFile(file)
-                        val video = Video(
-                            id = idC,
-                            title = titleC,
-                            duration = duration,
-                            folderName = folderC,
-                            size = sizeC,
-                            path = pathC,
-                            artUri = artUri
-                        )
-                        if (file.exists()) tempList.add(video)
-//----------------------------------------------------------------------------------------------------
-                        if (!tempFolderList.contains(folderC)) {
-                            tempFolderList.add(folderC)
-                            folderList.add(Folder(id = folerIDC, FolderName = folderC))
-                        }
-                    } catch (e: Exception) {
-                    }
-                } while (cursor.moveToNext())
-                cursor?.close()
-            }
-        }
-        return tempList
-    }
 
     private fun vibrat() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator

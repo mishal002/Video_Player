@@ -8,6 +8,22 @@
     android:background="#42000000"
     android:orientation="vertical">
 
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/playPauseBtn"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:clickable="true"-->
+    <!--        android:contentDescription="play_btn"-->
+    <!--        android:focusable="true"-->
+    <!--        android:src="@drawable/play_icon"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.498"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.526"-->
+    <!--        tools:ignore="HardcodedText" />-->
+
 
     <LinearLayout
         android:id="@+id/topController"
@@ -16,6 +32,7 @@
         android:background="#42000000"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -50,55 +67,13 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginEnd="50dp"
+            android:gravity="center"
             android:src="@drawable/menu"
             app:tint="@color/white" />
 
+
     </LinearLayout>
-
-
-    <!--    <FrameLayout-->
-    <!--        android:id="@+id/rewideFL"-->
-    <!--        android:layout_width="150dp"-->
-    <!--        android:layout_height="200dp"-->
-    <!--        android:layout_weight="1"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/playPauseBtn"-->
-    <!--        app:layout_constraintEnd_toStartOf="@+id/playPauseBtn"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/playPauseBtn"-->
-    <!--        tools:ignore="MissingConstraints">-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/rewideBtn"-->
-    <!--            android:layout_width="40dp"-->
-    <!--            android:layout_height="40dp"-->
-    <!--            android:layout_gravity="center"-->
-    <!--            android:background="@android:color/transparent"-->
-    <!--            android:clickable="false"-->
-    <!--            android:src="@drawable/fast_forward"-->
-    <!--            android:visibility="gone"-->
-    <!--            app:tint="@color/white" />-->
-
-    <!--    </FrameLayout>-->
-
-
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/playPauseBtn"-->
-    <!--        android:layout_width="100dp"-->
-    <!--        android:layout_height="100dp"-->
-    <!--        android:clickable="true"-->
-    <!--        android:contentDescription="play_btn"-->
-    <!--        android:focusable="true"-->
-    <!--        android:src="@drawable/play_icon"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.498"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:layout_constraintVertical_bias="0.526"-->
-    <!--        tools:ignore="HardcodedText" />-->
-
 
     <ImageView
         android:id="@+id/playPauseBtn"
@@ -116,38 +91,8 @@
         app:layout_constraintVertical_bias="0.526" />
 
 
-    <!--    android:background="?android:selectableItemBackground"-->
-
-
-    <!--    <FrameLayout-->
-    <!--        android:id="@+id/forwedFl"-->
-    <!--        android:layout_width="150dp"-->
-    <!--        android:layout_height="200dp"-->
-    <!--        android:layout_marginStart="6dp"-->
-    <!--        android:layout_weight="1"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/playPauseBtn"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="1.0"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/playPauseBtn"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/playPauseBtn"-->
-    <!--        tools:ignore="MissingConstraints">-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/forwedBtn"-->
-    <!--            android:layout_width="40dp"-->
-    <!--            android:layout_height="40dp"-->
-    <!--            android:layout_gravity="center"-->
-    <!--            android:background="@android:color/transparent"-->
-    <!--            android:clickable="false"-->
-    <!--            android:src="@drawable/fast_forward"-->
-    <!--            android:visibility="gone"-->
-    <!--            app:tint="@color/white" />-->
-
-    <!--    </FrameLayout>-->
-
-
     <com.google.android.exoplayer2.ui.DefaultTimeBar
-        android:id="@id/exo_progress"
+        android:id="@+id/exo_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
@@ -163,118 +108,123 @@
         app:scrubber_enabled_size="15dp"
         app:unplayed_color="#80FFFFFF" />
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:layout_marginBottom="8dp"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintStart_toStartOf="parent"
-       tools:ignore="MissingConstraints">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints">
 
 
-       <LinearLayout
-           android:layout_weight="1"
-           android:id="@+id/linearLayout"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginStart="10dp">
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1">
 
-           <TextView
-               android:id="@id/exo_position"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_margin="10dp"
-               android:text="duration"
-               android:textColor="@color/white"
-               android:textSize="16sp"
-               android:textStyle="bold"
-               tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@id/exo_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="duration"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginVertical="10dp"
-               android:text=":"
-               android:textColor="@color/white"
-               android:textSize="16sp"
-               android:textStyle="bold"
-               tools:ignore="HardcodedText" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text=":"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
-           <TextView
-               android:id="@id/exo_duration"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_margin="10dp"
-               android:text="loading"
-               android:textColor="@color/white"
-               android:textSize="16sp"
-               android:textStyle="bold"
-               tools:ignore="HardcodedText" />
-       </LinearLayout>
+            <TextView
+                android:id="@id/exo_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="loading"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
 
-       <LinearLayout
-           android:layout_weight="1"
-           android:id="@+id/bottomController"
-           android:layout_width="wrap_content"
-           android:layout_height="40dp"
-           android:gravity="end|bottom"
-           android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/bottomController"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="end|bottom"
+            android:orientation="horizontal">
 
-           <!--        <ImageButton-->
-           <!--            android:id="@+id/orientationBtn"-->
-           <!--            android:layout_width="45dp"-->
-           <!--            android:layout_height="match_parent"-->
-           <!--            android:background="?attr/selectableItemBackground"-->
-           <!--            android:contentDescription="@string/orientation"-->
-           <!--            android:src="@drawable/orientation_icon"-->
-           <!--            app:tint="@color/white" />-->
+            <ImageView
+                android:id="@+id/orientationBtn"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="orientation"
+                android:src="@drawable/orientation_btn"
+                app:tint="@color/white"
+                tools:ignore="HardcodedText" />
 
-           <ImageView
-               android:id="@+id/repeatBtn"
-               android:layout_width="40dp"
-               android:layout_height="match_parent"
-               android:contentDescription="@string/repeat_btn"
-               android:padding="5dp"
-               android:src="@drawable/repeat_off_btn" />
+            <ImageView
+                android:id="@+id/repeatBtn"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/repeat_btn"
+                android:padding="5dp"
+                android:src="@drawable/repeat_off_btn"
+                app:tint="@color/white" />
 
-           <ImageView
-               android:id="@+id/prevBtn"
-               android:layout_width="25dp"
-               android:layout_height="match_parent"
-               android:layout_marginStart="10dp"
-               android:layout_marginEnd="10dp"
-               android:backgroundTint="@android:color/transparent"
+            <ImageView
+                android:id="@+id/prevBtn"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:backgroundTint="@android:color/transparent"
+                android:contentDescription="@string/prev_icon"
+                android:padding="2dp"
+                android:src="@drawable/previous_icon"
+                app:tint="@color/white" />
 
-               android:contentDescription="@string/prev_icon"
-               android:padding="2dp"
-               android:src="@drawable/previous_icon" />
+            <ImageView
+                android:id="@+id/nextBtn"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:backgroundTint="@android:color/transparent"
+                android:contentDescription="@string/next_btn"
+                android:padding="1dp"
+                android:src="@drawable/next_icon"
+                app:tint="@color/white" />
 
-           <ImageView
-               android:id="@+id/nextBtn"
-               android:layout_width="25dp"
-               android:layout_height="match_parent"
-               android:layout_marginStart="10dp"
-               android:layout_marginEnd="10dp"
-               android:backgroundTint="@android:color/transparent"
-               android:contentDescription="@string/next_btn"
-               android:padding="1dp"
-               android:src="@drawable/next_icon" />
+            <ImageView
+                android:id="@+id/fullScreenBtn"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="@android:color/transparent"
+                android:contentDescription="fullscreen_btn"
+                android:padding="3dp"
+                android:src="@drawable/full_screen_btn"
+                app:tint="@color/white"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
 
-           <ImageView
-               android:id="@+id/fullScreenBtn"
-               android:layout_width="25dp"
-               android:layout_height="match_parent"
-               android:layout_marginStart="10dp"
-               android:layout_marginEnd="20dp"
-               android:backgroundTint="@android:color/transparent"
-               android:contentDescription="fullscreen_btn"
-               android:padding="3dp"
-               android:src="@drawable/full_screen_btn"
-               tools:ignore="HardcodedText" />
-       </LinearLayout>
-
-   </LinearLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,15 +7,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import e_card.e_cardaddress.adresschange.video_player.Activitys.MainActivity
-import e_card.e_cardaddress.adresschange.video_player.Activitys.PlayerActivity
 import e_card.e_cardaddress.adresschange.video_player.Adapters.VideoAdapter
+import e_card.e_cardaddress.adresschange.video_player.Data.getAllVideo
 import e_card.e_cardaddress.adresschange.video_player.R
 import e_card.e_cardaddress.adresschange.video_player.databinding.FragmentVideosBinding
 
 class VideosFragment : Fragment() {
 
     lateinit var adapter: VideoAdapter
-   lateinit var binding: FragmentVideosBinding
+    lateinit var binding: FragmentVideosBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -36,7 +36,21 @@ class VideosFragment : Fragment() {
         adapter = VideoAdapter(requireContext(), MainActivity.videoList)
         binding.VideoRV.adapter = adapter
         binding.totalVideoFA.text = "Total Video:${MainActivity.videoList.size}"
+
+
+//        refreshLayout
+        binding.root.setOnRefreshListener {
+
+            MainActivity.videoList = getAllVideo(requireContext())
+            adapter.updateList(MainActivity.videoList)
+            binding.totalVideoFA.text = "Total Video:${MainActivity.videoList.size}"
+
+            binding.root.isRefreshing = false
+
+        }
+
         return view
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
